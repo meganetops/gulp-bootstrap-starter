@@ -1,0 +1,6 @@
+/bower_components
+/node_modules
+/asset/sass/vendor/bootstrap
+/html/js/jquery.latest.min.js
+/html/js/bootstrap
+html/fonts/bootstrap

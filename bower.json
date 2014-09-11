@@ -1,0 +1,19 @@
+{
+  "name": "bootstrap",
+  "version": "0.0.0",
+  "authors": [
+    "minami takao <minami@waveltd.co.jp>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "bootstrap-sass-official": "~3.2.0+2",
+    "html5-boilerplate": "~4.3.0"
+  }
+}
