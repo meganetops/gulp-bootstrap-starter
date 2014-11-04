@@ -1,5 +1,6 @@
 @import "import";
 
-h1 {
-  color: red;
+input,textarea {
+  //フォーカスした際にズームされないよう文字サイズを大きめに
+  font-size: 17px;
 }
