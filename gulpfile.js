@@ -140,6 +140,9 @@ gulp.task('bower_default', function () {
   //matchHeight 
   gulp.src('bower_components/matchHeight/jquery.matchHeight-min.js')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
+  //lazyload 
+  gulp.src('bower_components/jquery.lazyload/jquery.lazyload.min.js')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
   //bxslider
   gulp.src('bower_components/bxslider-4/jquery.bxslider.min.js')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/bxslider'));
