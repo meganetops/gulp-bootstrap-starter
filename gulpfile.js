@@ -148,6 +148,9 @@ gulp.task('bower_default', function () {
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/bxslider'));
   gulp.src('bower_components/bxslider-4/jquery.bxslider.css')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/bxslider'));
+  // background-size-polyfill
+  gulp.src('bower_components/background-size-polyfill/backgroundsize.min.htc')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/backgroundsize.min.htc'));
 });
 
 /* ----------------------------------
