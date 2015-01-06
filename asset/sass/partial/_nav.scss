@@ -1,0 +1,10 @@
+@charset "utf-8";
+#globalNav {
+  @extend %reset;
+  @media #{$break-sm} {
+  }
+  @media #{$break-md} {
+  }
+  @media #{$break-lg} {
+  }
+}

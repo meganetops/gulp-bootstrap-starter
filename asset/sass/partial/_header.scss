@@ -1,0 +1,10 @@
+@charset "utf-8";
+#globalHeader {
+  @extend %reset;
+  @media #{$break-sm} {
+  }
+  @media #{$break-md} {
+  }
+  @media #{$break-lg} {
+  }
+}

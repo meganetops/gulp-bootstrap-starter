@@ -1,0 +1,54 @@
+@charset "utf-8";
+//----------------------------------------
+//  font colors
+//----------------------------------------
+$font-family-sans-serif:Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
+// $font-family-serif:"Times New Roman", "ヒラギノ明朝 W3 JIS2004", "Hiragino Mincho W3 JIS2004", "游明朝", YuMincho, serif;
+$font-family-serif:"ヒラギノ明朝 W3 JIS2004";
+//----------------------------------------
+//  break points
+//----------------------------------------
+// Extra small screen / phone
+$screen-xs:                  480px;
+// Small screen / tablet
+$screen-sm:                  768px;
+$screen-sm-min:              $screen-xs+1;
+// Medium screen / desktop
+$screen-md:                  960px;
+$screen-md-min:              $screen-sm+1;
+// Large screen / wide desktop
+$screen-lg:                  1122px;
+$screen-lg-min:              $screen-md+1;
+//----------------------------------------
+//  media query points
+//----------------------------------------
+// 480px 以下
+$break-xs:    'only screen and (max-width:'+ $screen-xs +'), print and (max-width: 1cm)';
+// 481px以上
+$break-sm:    'only screen and (min-width:'+ $screen-sm-min +'), print and (min-width: 2cm)';
+// 769px以上
+$break-md:    'only screen and (min-width:'+ $screen-md-min +'), print and (min-width: 2cm)';
+// 1112px以上
+$break-lg:    'only screen and (min-width:'+ $screen-lg-min +'), print and (min-width: 2cm)';
+//------------------------------------------
+//  colors
+//------------------------------------------
+$color-black: #272727;
+$color-main: #1f459b;
+$color-purple: #36376a;
+// $color-sub: #1B387C;
+//----------------------------------------
+//  font size
+//----------------------------------------
+$font-size-base: 16px;
+$font-size-h1: floor(($font-size-base * 2.5));
+$line-height-base:1.6;
+$line-height-computed:1.8;
+$vartical-line1: 1.8;
+$vartical-line2: 1.5;
+//----------------------------------------
+//  other
+//----------------------------------------
+$grid-gutter-width:60px;
+$content-inner-width: 960px;
+$content-bottom: 4em;

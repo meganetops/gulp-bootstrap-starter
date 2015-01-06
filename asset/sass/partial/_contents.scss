@@ -1,0 +1,33 @@
+@charset "utf-8";
+#contents {
+  
+  @media #{$break-sm} {
+  }
+  @media #{$break-md} {
+  }
+  @media #{$break-lg} {
+  }
+
+  // -----------------------
+  // section
+  //------------------------
+  .section-box {
+    margin-bottom: 3em;
+    .section-box {
+      margin-bottom: 1.5em;
+    }
+    @media #{$break-sm} {
+    }
+    @media #{$break-md} {
+      .section-box {
+        margin-bottom: 4em;
+        .section-box {
+          margin-bottom: 2em;
+        }
+      }
+    }
+    @media #{$break-lg} {
+    }
+  }
+  
+}

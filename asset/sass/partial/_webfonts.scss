@@ -1,0 +1,33 @@
+@charset "utf-8";
+//----------------------------------------
+//  Webfonts
+//----------------------------------------
+@font-face {
+  font-family: 'Hoge';
+  src:url('../fonts/hoge/hoge.eot?36frzv');
+  src:url('../fonts/hoge/hoge.eot?#iefix36frzv') format('embedded-opentype'),
+    url('../fonts/hoge/hoge.woff?36frzv') format('woff'),
+    url('../fonts/hoge/hoge.ttf?36frzv') format('truetype'),
+    url('../fonts/hoge/hoge.svg?36frzv#hoge') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.icon-font {
+  @include webfont('Hoge');
+  &:before {
+    margin: auto;
+    display: inline-block;
+    font-family: inherit;
+    display: inline-block;
+    position: absolute;
+    top:0;bottom:0;
+    left:0;right:0;
+    margin: auto;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+  }
+}
+
+$icon-printer: "\e954";
