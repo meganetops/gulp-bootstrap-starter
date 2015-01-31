@@ -2,7 +2,7 @@
 //----------------------------------------
 //  mixin
 //----------------------------------------
-@mixin backgroundSizeFixIE($pram:contain,$path){
+@mixin backgroundSizeFixIE($path,$pram:contain){
   background-size: $pram;
   -ms-behavior: url($path);
 }
