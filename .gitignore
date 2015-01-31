@@ -6,3 +6,5 @@
 html/fonts/bootstrap
 /gulp-bootstrap-starter.sublime-project
 /gulp-bootstrap-starter.sublime-workspace
+build
+dist

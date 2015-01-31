@@ -7,13 +7,13 @@ var browsersync = require('browser-sync');
 var reload = browsersync.reload;
 
 var AUTOPREFIXER_BROWSERS = ['last 2 version','ie 9','ie 8'];
-var DOCUMENT_ROOT    = "html";
-var ASSET_IMAGES     = "asset/images";
-var ASSET_SASS       = "asset/sass";
-var ASSET_ICON       = "asset/icons";
-var ASSET_JS         = "asset/js";
+var DOCUMENT_ROOT    = "build";
+var ASSET_IMAGES     = "src";
+var ASSET_SASS       = "src/sass";
+var ASSET_ICON       = "src/icons";
+var ASSET_JS         = "src/js";
 var SASS_ARG         = {
-                      loadPath: 'asset/sass',
+                      loadPath: 'src/sass',
                       style: 'expanded',
                       noCache: true
                     };
@@ -25,8 +25,8 @@ var BS_OPTIONS       = {
                         server: {
                           baseDir: DOCUMENT_ROOT
                         },
-                        host: MY_IP,
-                        port: SERVER_PORT,
+                        // host: MY_IP,
+                        // port: SERVER_PORT,
                         startPath: SERVER_STARTPATH
                         // proxy: SERVER_PROXY
                       };
@@ -45,32 +45,47 @@ gulp.task('server',function(){
   gulp.watch([ASSET_SASS+'/**/*.scss'], ['sassy']);
   gulp.watch([DOCUMENT_ROOT+'/**/*.html'],reload);
   gulp.watch([DOCUMENT_ROOT+'/**/*.css'], reload);
+  gulp.watch([ASSET_IMAGES+'/**/*.+(jpg|gif|png)'], ['img']);
 });
 /*
-  Sass Compail
+  Sassのコンパイル
 */
-gulp.task('sassy',function(){
-  return gulp.src([ASSET_SASS+'/**/*.scss','!'+ASSET_SASS+'/bootstrap.scss'])
-      .pipe($.rubySass(SASS_ARG))
-      .on('error', function (err) { console.log(err.message); })
-      .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
-      .pipe(gulp.dest(DOCUMENT_ROOT));
+gulp.task('sassy',['sass'],function(){
+  // sassタスク終了時に何かしたければこちらへ?
+  console.log('done');
 });
 /*
   画像のサイズ圧縮
 */
-gulp.task('img',['imagemin'],function(cb){
-  del([ASSET_IMAGES+'/**/*'],cb);
+gulp.task('img',['imagemin'],function(){
+  // imageminタスク終了時に何かしたければこちらへ?
+  // del([ASSET_IMAGES+'/**/*.(jpg|gif|png)'],cb);
+  console.log('done');
 });
 /* ----------------------------------
   tasks
 ----------------------------------- */
-gulp.task('imagemin', function () {
-  return gulp.src(ASSET_IMAGES+'/**/*')
-      .pipe($.imagemin())
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/img'));
+/*
+  Sass Compail
+*/
+gulp.task('sass',function(){
+  return gulp.src([ASSET_SASS+'/**/*.scss','!'+ASSET_SASS+'/bootstrap.scss'])
+      .pipe($.rubySass(SASS_ARG))
+      .on('error', function (err) { console.log(err.message); })
+      .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/css'));
 });
-
+/*
+  Images Mininy
+*/
+gulp.task('imagemin', function (fn) {
+  return gulp.src(ASSET_IMAGES+'/**/*.+(jpg|gif|png)')
+      .pipe($.imagemin())
+      .pipe(gulp.dest(DOCUMENT_ROOT));
+});
+/*
+  icon Font
+*/
 // gulp.task('iconfont', function(){
 //   gulp.src([ASSET_ICON+'/*.svg'])
 //     .pipe($.iconfont({

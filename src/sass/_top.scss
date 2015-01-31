@@ -1,0 +1,10 @@
+@charset "utf-8";
+.top {
+  @include backgroundSizeFixIE($backgroundsize-htc-path,'contain');
+  @media #{$break-sm} {
+  }
+  @media #{$break-md} {
+  }
+  @media #{$break-lg} {
+  }
+}
