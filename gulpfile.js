@@ -155,7 +155,7 @@ gulp.task('bower_default', function () {
   gulp.src('bower_components/owl-carousel2/dist/owl.carousel.min.js')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
   gulp.src('bower_components/owl-carousel2/dist/assets/owl.carousel.min.css')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));]
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
   gulp.src('bower_components/owl-carousel2/dist/assets/owl.theme.default.min.css')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
   gulp.src('bower_components/owl-carousel2/dist/assets/ajax-loader.gif')
