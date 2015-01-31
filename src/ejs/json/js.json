@@ -1,0 +1,21 @@
+{
+  "js": {
+    "head_js": [
+      "js/lib/javascript.js",
+      "js/lib/javascript.js",
+      "js/lib/javascript.js"
+    ],
+    "head_css": [
+      "js/css/javascript.css",
+      "js/css/javascript.css",
+      "js/css/javascript.css"
+    ],
+    "foot_js": [
+      "js/lib/jquery.easings.min.js",
+      "js/lib/jquery.matchHeight-min.js",
+      "js/lib/magnific-popup/jquery.magnific-popup.min.js",
+      "js/lib/jquery.lazyload.min.js",
+      "js/common.js"
+    ]
+  }
+}

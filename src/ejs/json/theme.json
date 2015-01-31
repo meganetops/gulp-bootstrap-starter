@@ -1,9 +1,9 @@
 {
   "theme": {
-    "siteName": "EJSEJS & gulpサンプルサイト",
-    "pageTitle": "トップページ",
-    "siteRootURL": "http://www.exsample.com/sample/",
-    "ga": "UA-19298833-3",
-    "facebookAppID": "9876543210"
+    "siteName"      : "EJSEJS & gulpサンプルサイト",
+    "pageTitle"     : "トップページ",
+    "siteRootURL"   : "",
+    "ga"            : "**-********-*",
+    "facebookAppID" : ""
   }
 }

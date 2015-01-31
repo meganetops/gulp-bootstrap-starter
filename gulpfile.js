@@ -82,6 +82,12 @@ gulp.task('img',['imagemin'],function(){
   // del([ASSET_IMAGES+'/**/*.(jpg|gif|png)'],cb);
   console.log('done');
 });
+/*
+  distribute
+*/
+gulp.task('release',function(){
+  console.log('done');
+});
 /* ----------------------------------
   tasks
 ----------------------------------- */

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta charset="UTF-8">
+    <title><%= theme.pageTitle %> - <%= theme.siteName %></title>
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:site_name" content="<%= theme.siteName %>">
+    <meta property="og:title" content="<%= theme.pageTitle %>">
+    <meta property="og:description" content="これは<%= theme.pageTitle %>のサンプルです。">
+    <meta property="og:url" content="<%= theme.siteRootURL %>index.html">
+    <meta property="og:image" content="<%= theme.siteRootURL %>images/facebook.png">
+    <meta property="fb:app_id" content="<%= theme.facebookAppID %>">
+    <% js.head_css.forEach(function(css){ %>
+    <link rel="stylesheet" href="<%= theme.siteRootURL %>/<%= css %>">
+    <% }) %>
+    <link rel="stylesheet" href="<%= theme.siteRootURL %>/css/style.css">
+    <script src="<%= theme.siteRootURL %>/js/lib/modernizr.min.js"></script>
+    <% js.head_js.forEach(function(js){ %>
+    <script src="<%= theme.siteRootURL %>/<%= js %>"></script>
+    <% }) %>
+    <!--[if lt IE 9]>
+    <script src="<%= theme.siteRootURL %>/js/lib/respond.min.js"></script>
+    <script src="<%= theme.siteRootURL %>/js/lib/selectivizr.min.js"></script>
+    <![endif]-->
+</head>

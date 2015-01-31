@@ -1,0 +1,9 @@
+<!--[if lt IE 9]>
+<script src="<%= theme.siteRootURL %>/js/jquery.legacy.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="<%= theme.siteRootURL %>/js/jquery.min.js"></script>
+<!--<![endif]-->
+<% js.foot_js.forEach(function(js){ %>
+<script src="<%= theme.siteRootURL %>/<%= js %>"></script>
+<% }) %>
