@@ -33,6 +33,20 @@ var BS_OPTIONS       = {
                         startPath: SERVER_STARTPATH
                         // proxy: SERVER_PROXY
                       };
+var HTMLMIN_OPTIONS  = {
+                        empty:true,
+                        //do not remove empty attributes
+                        cdata: true, 
+                        //do not strip CDATA from scripts
+                        comments: true, 
+                        //do not remove comments
+                        conditionals: true, 
+                        //do not remove conditional internet explorer comments
+                        spare: true, 
+                        //do not remove redundant attributes
+                        quotes: true
+                        //do not remove arbitrary quotes
+                      };
 /* ----------------------------------
   packed task
 ----------------------------------- */
@@ -108,6 +122,8 @@ gulp.task('ejs', function (e) {
   return gulp.src( [ASSET_DIR+"/**/*.ejs",'!'+ASSET_EJS+"/**/*.ejs"] )
       .pipe($.ejs(json))
       .on('error', function (err) { console.log(err.message); })
+      .pipe($.prettify())
+      // .pipe($.minifyHtml(HTMLMIN_OPTIONS))
       .pipe(gulp.dest(DOCUMENT_ROOT));
 });
 /*
