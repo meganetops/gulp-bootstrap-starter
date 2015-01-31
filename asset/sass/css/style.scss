@@ -1,10 +1,98 @@
-@import "import";
+@charset "utf-8";
+@import "partial/setting";
+@import "partial/mixin-extends";
+@import "partial/webfonts";
+@import "partial/bootstrap";
 
-body {
-  font-family: Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
+/*
+  debug with breakpoint
+*/
+body:after {
+  content: "sp";
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999999999;
+  display: block;
+  padding: 1em;
+  background-color: rgba(#ccc, 0.8);
+  @media #{$break-sm} {
+   content: "tab";
+  }
+  @media #{$break-md} {
+   content: "dsk";
+  }
+  @media #{$break-lg} {
+   content: "wide";
+  }
 }
 
+/* ---------------------------------------------
+  OTHER
+----------------------------------------------*/
 input,textarea {
   //フォーカスした際にズームされないよう文字サイズを大きめに
   font-size: 17px;
 }
+img {
+  // responsive images
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+h1, .h1,
+h2, .h2 {
+  margin-top: auto;
+  margin-bottom: floor(($font-size-h1 * $line-height-computed) /2);
+}
+h3, .h3 {
+  margin-top: auto;
+  margin-bottom: floor(($font-size-h2 * $line-height-computed) /2);
+}
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  margin-top: auto;
+  margin-bottom: floor(($font-size-h4 * $line-height-computed) /2);
+}
+*:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+// p:last-child {
+//   margin-bottom: 0;
+//   padding-bottom: 0;
+// }
+/* ---------------------------------------------
+  OUTLINE
+----------------------------------------------*/
+html {
+}
+body {
+}
+// ---------------------------------------------
+//  #global header
+// ---------------------------------------------
+@import "partial/header";
+// ---------------------------------------------
+//  #global nav
+// ---------------------------------------------
+@import "partial/nav";
+// ---------------------------------------------
+//  #contents
+// ---------------------------------------------
+@import "partial/contents";
+// ---------------------------------------------
+//  #global footer
+// ---------------------------------------------
+@import "partial/footer";
+// ---------------------------------------------
+// MODULES
+// ---------------------------------------------
+@import "partial/modules";
+// ---------------------------------------------
+//  Pages
+// ---------------------------------------------
+/* ---------------------------------------------
+  TOP
+--------------------------------------------- */
+@import "top";

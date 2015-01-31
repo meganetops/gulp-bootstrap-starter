@@ -2,6 +2,10 @@
 //----------------------------------------
 //  mixin
 //----------------------------------------
+@mixin backgroundSizeFixIE($pram:contain,$path){
+  background-size: $pram;
+  -ms-behavior: url($path);
+}
 //font size
 @mixin fz($size) {
   font-size: $size+px;
