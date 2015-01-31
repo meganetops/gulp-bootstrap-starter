@@ -29,6 +29,7 @@
     "jquery.lazyload": "latest",
     "gmap3": "latest",
     "background-size-polyfill": "latest",
-    "owl-carousel2": "*"
+    "owl-carousel2": "*",
+    "slider-pro": "~1.1.0"
   }
 }
