@@ -20,18 +20,13 @@
     "masonry": "latest",
     "purl": "latest",
     "matchHeight": "latest",
-    "OwlCarousel": "latest",
-    "scrollstory": "latest",
     "magnific-popup": "latest",
-    "jquery.gmap": "latest",
     "selectivizr": "latest",
     "bxslider-4": "~4.1.2",
     "jquery-legacy": "jquery#1",
     "jquery-modern": "jquery#2",
     "respond": "latest",
-    "Naver": "latest",
     "jquery.lazyload": "latest",
-    "fullpage.js": "latest",
     "gmap3": "latest",
     "background-size-polyfill": "latest"
   }
