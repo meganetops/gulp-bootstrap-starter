@@ -21,6 +21,15 @@ var MY_IP            = "192.168.*.**";
 var SERVER_PORT      = 9000;
 var SERVER_STARTPATH = '/index.html';
 var SERVER_PROXY     = 'hoge.localhost';
+var BS_OPTIONS       = {
+                        server: {
+                          baseDir: DOCUMENT_ROOT
+                        },
+                        host: MY_IP,
+                        port: SERVER_PORT,
+                        startPath: SERVER_STARTPATH
+                        // proxy: SERVER_PROXY
+                      };
 /* ----------------------------------
   packed task
 ----------------------------------- */
@@ -32,15 +41,7 @@ gulp.task('install', ['bower_default','install_strap']);
   BrowserSync & WATCH
 */
 gulp.task('server',function(){
-  browsersync({
-    server: {
-      baseDir: DOCUMENT_ROOT
-    },
-    host: MY_IP,
-    port: SERVER_PORT,
-    startPath: SERVER_STARTPATH,
-    proxy: SERVER_PROXY
-  });
+  browsersync(BS_OPTIONS);
   gulp.watch([ASSET_SASS+'/**/*.scss'], ['sassy']);
   gulp.watch([DOCUMENT_ROOT+'/**/*.html'],reload);
   gulp.watch([DOCUMENT_ROOT+'/**/*.css'], reload);
