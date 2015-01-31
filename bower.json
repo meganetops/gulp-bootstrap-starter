@@ -28,6 +28,7 @@
     "respond": "latest",
     "jquery.lazyload": "latest",
     "gmap3": "latest",
-    "background-size-polyfill": "latest"
+    "background-size-polyfill": "latest",
+    "owl-carousel2": "*"
   }
 }
