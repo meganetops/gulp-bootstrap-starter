@@ -1,11 +1,11 @@
 {
   "shops": [
     {
-        "shop_name" : "ショップ---no1",
+        "shop_name" : "ショップ---no101",
         "shop_description" : "ショップ1の説明"
     },
     {
-        "shop_name" : "ショップ2---no2",
+        "shop_name" : "ショップ2---no200",
         "shop_description" : "ショップ2の説明"
     },
     {

@@ -2,14 +2,17 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
+var fs = require('fs');
 var del = require('del');
 var browsersync = require('browser-sync');
 var reload = browsersync.reload;
 
 var AUTOPREFIXER_BROWSERS = ['last 2 version','ie 9','ie 8'];
 var DOCUMENT_ROOT    = "build";
-var ASSET_IMAGES     = "src";
+var ASSET_DIR        = "src";
+var ASSET_IMAGES     = ASSET_DIR;
 var ASSET_SASS       = "src/sass";
+var ASSET_EJS        = "src/ejs";
 var ASSET_ICON       = "src/icons";
 var ASSET_JS         = "src/js";
 var SASS_ARG         = {
@@ -42,10 +45,27 @@ gulp.task('install', ['bower_default','install_strap']);
 */
 gulp.task('server',function(){
   browsersync(BS_OPTIONS);
-  gulp.watch([ASSET_SASS+'/**/*.scss'], ['sassy']);
-  gulp.watch([DOCUMENT_ROOT+'/**/*.html'],reload);
-  gulp.watch([DOCUMENT_ROOT+'/**/*.css'], reload);
-  gulp.watch([ASSET_IMAGES+'/**/*.+(jpg|gif|png)'], ['img']);
+  gulp.watch( [ASSET_EJS+'/json/*.json'],['jsony'] );
+  gulp.watch( [ASSET_DIR+'/**/*.ejs'],['ejsy'] );
+  gulp.watch( [ASSET_SASS+'/**/*.scss'], ['sassy'] );
+  gulp.watch( [DOCUMENT_ROOT+'/**/*.html'],reload );
+  gulp.watch( [DOCUMENT_ROOT+'/**/*.css'], reload );
+  gulp.watch( [ASSET_IMAGES+'/**/*.+(jpg|gif|png)'], ['img'] );
+});
+/*
+  EJS用JSONのコンパイル
+*/
+gulp.task('jsony',['ejs_json'],function(){
+  // ejs_jsonタスク終了時に何かしたければこちらへ?
+  return gulp.run(['ejsy']);
+  console.log('done');
+});
+/*
+  EJSのコンパイル
+*/
+gulp.task('ejsy',['ejs'],function(){
+  // ejsタスク終了時に何かしたければこちらへ?
+  console.log('done');
 });
 /*
   Sassのコンパイル
@@ -65,6 +85,25 @@ gulp.task('img',['imagemin'],function(){
 /* ----------------------------------
   tasks
 ----------------------------------- */
+/*
+    EJS用JSONファイルを結合
+*/
+gulp.task('ejs_json', function (callback) {
+    return gulp.src(ASSET_EJS+'/json/*.json')
+        .pipe($.extend('site.json'))
+        .on('error', function (err) { console.log(err.message); })
+        .pipe(gulp.dest(ASSET_EJS));
+});
+/*
+    EJSでHTMLファイルを生成
+*/
+gulp.task('ejs', function (e) {
+  var json = JSON.parse(fs.readFileSync(ASSET_EJS+"/site.json"));
+  return gulp.src( [ASSET_DIR+"/**/*.ejs",'!'+ASSET_EJS+"/**/*.ejs"] )
+      .pipe($.ejs(json))
+      .on('error', function (err) { console.log(err.message); })
+      .pipe(gulp.dest(DOCUMENT_ROOT));
+});
 /*
   Sass Compail
 */
