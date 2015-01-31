@@ -6,44 +6,47 @@ var del = require('del');
 var browsersync = require('browser-sync');
 var reload = browsersync.reload;
 
-var DOCUMENT_ROOT = "html";
-var ASSET_IMAGES = "asset/images";
-var ASSET_SASS= "asset/sass";
-var ASSET_ICON= "asset/icons";
-var ASSET_JS= "asset/js";
 var AUTOPREFIXER_BROWSERS = ['last 2 version','ie 9','ie 8'];
-
-var SASS_ARG = {
-  loadPath: 'asset/sass',
-  style: 'expanded',
-  noCache: true
-};
+var DOCUMENT_ROOT    = "html";
+var ASSET_IMAGES     = "asset/images";
+var ASSET_SASS       = "asset/sass";
+var ASSET_ICON       = "asset/icons";
+var ASSET_JS         = "asset/js";
+var SASS_ARG         = {
+                      loadPath: 'asset/sass',
+                      style: 'expanded',
+                      noCache: true
+                    };
+var MY_IP            = "192.168.*.**";
+var SERVER_PORT      = 9000;
+var SERVER_STARTPATH = '/index.html';
+var SERVER_PROXY     = 'hoge.localhost';
 /* ----------------------------------
   packed task
 ----------------------------------- */
 /*
-  画像のサイズ圧縮
+  SRATKIT INSTALL
 */
-gulp.task('img',['imagemin'],function(cb){
-  del([ASSET_IMAGES+'/**/*'],cb);
-});
+gulp.task('install', ['bower_default','install_strap']);
 /*
-  BrowserSync
+  BrowserSync & WATCH
 */
 gulp.task('server',function(){
   browsersync({
     server: {
       baseDir: DOCUMENT_ROOT
     },
-    host: "192.168.1.58",
-    port: 9000
+    host: MY_IP,
+    port: SERVER_PORT,
+    startPath: SERVER_STARTPATH,
+    proxy: SERVER_PROXY
   });
-  gulp.watch([DOCUMENT_ROOT+'/**/*.html'],reload);
   gulp.watch([ASSET_SASS+'/**/*.scss'], ['sassy']);
+  gulp.watch([DOCUMENT_ROOT+'/**/*.html'],reload);
   gulp.watch([DOCUMENT_ROOT+'/**/*.css'], reload);
 });
 /*
-  Sass compail
+  Sass Compail
 */
 gulp.task('sassy',function(){
   return gulp.src([ASSET_SASS+'/**/*.scss','!'+ASSET_SASS+'/bootstrap.scss'])
@@ -52,9 +55,12 @@ gulp.task('sassy',function(){
       .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
       .pipe(gulp.dest(DOCUMENT_ROOT));
 });
-
-gulp.task('install', ['bower_default','install_strap']);
-
+/*
+  画像のサイズ圧縮
+*/
+gulp.task('img',['imagemin'],function(cb){
+  del([ASSET_IMAGES+'/**/*'],cb);
+});
 /* ----------------------------------
   tasks
 ----------------------------------- */
@@ -76,7 +82,6 @@ gulp.task('imagemin', function () {
 //       })
 //     .pipe(gulp.dest(DOCUMENT_ROOT+'/fonts/'));
 // });
-
 /*
   Bootstrap bower_compornents to some folsers
 */
@@ -108,47 +113,63 @@ gulp.task('copy_sass', function () {
 });
 
 gulp.task('bower_default', function () {
-  //jquery1.* - for IE8
+//jquery1.* - for IE8
   gulp.src('bower_components/jquery-legacy/dist/jquery.min.js')
     .pipe($.rename('jquery.legacy.min.js'))
     .pipe(gulp.dest(DOCUMENT_ROOT+'/js'))
-  //jquery2.*
+//jquery2.*
   gulp.src('bower_components/jquery-modern/dist/jquery.min.js')
     .pipe($.rename('jquery.min.js'))
     .pipe(gulp.dest(DOCUMENT_ROOT+'/js'))
-  //modernizr
+//modernizr
   gulp.src('bower_components/modernizr/modernizr.js')
       .pipe($.uglify({ preserveComments: 'all' }))
       .pipe($.rename('modernizr.min.js'))
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
-  //selectivizr
+//selectivizr
   gulp.src('bower_components/selectivizr/selectivizr.js')
       .pipe($.uglify({ preserveComments: 'all' }))
       .pipe($.rename('selectivizr.min.js'))
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
-  //respond 
+//respond 
   gulp.src('bower_components/respond/dest/respond.min.js')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
-  //jquery-cookie
+//jquery-cookie
   gulp.src('bower_components/jquery.cookie/jquery.cookie.js')
       .pipe($.uglify({ preserveComments: 'all' }))
       .pipe($.rename('jquery.cookie.min.js'))
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
-  //magnific-popup
+//magnific-popup
   gulp.src('bower_components/magnific-popup/dist/*')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/magnific-popup'));
-  //matchHeight 
+//matchHeight 
   gulp.src('bower_components/matchHeight/jquery.matchHeight-min.js')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
-  //lazyload 
+//lazyload 
   gulp.src('bower_components/jquery.lazyload/jquery.lazyload.min.js')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
-  //bxslider
+//bxslider
   gulp.src('bower_components/bxslider-4/jquery.bxslider.min.js')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/bxslider'));
-  gulp.src('bower_components/bxslider-4/jquery.bxslider.css')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/bxslider'));
-  // background-size-polyfill
+//OwlCarousel2
+  gulp.src('bower_components/owl-carousel2/dist/owl.carousel.min.js')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+  gulp.src('bower_components/owl-carousel2/dist/assets/owl.carousel.min.css')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));]
+  gulp.src('bower_components/owl-carousel2/dist/assets/owl.theme.default.min.css')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+  gulp.src('bower_components/owl-carousel2/dist/assets/ajax-loader.gif')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+  gulp.src('bower_components/owl-carousel2/dist/assets/owl.video.play.png')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+// Slider-pro
+  gulp.src('bower_components/slider-pro/dist/js/jquery.sliderPro.min.js')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/slider-pro'));
+  gulp.src('bower_components/slider-pro/dist/css/slider-pro.min.css')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/slider-pro'));
+  gulp.src('bower_components/slider-pro/dist/css/images/*')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/slider-pro/images'));
+// background-size-polyfill
   gulp.src('bower_components/background-size-polyfill/backgroundsize.min.htc')
       .pipe(gulp.dest(DOCUMENT_ROOT+'/'));
 });
