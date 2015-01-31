@@ -14,7 +14,7 @@
   ],
   "devDependencies": {
     "bootstrap-sass-official": "latest",
-    "html5-boilerplate": "~4.3.0",
+    "html5-boilerplate": "latest",
     "modernizr": "latest",
     "jquery-cookie": "latest",
     "masonry": "latest",
@@ -22,14 +22,14 @@
     "matchHeight": "latest",
     "magnific-popup": "latest",
     "selectivizr": "latest",
-    "bxslider-4": "~4.1.2",
+    "bxslider-4": "latest",
     "jquery-legacy": "jquery#1",
     "jquery-modern": "jquery#2",
     "respond": "latest",
     "jquery.lazyload": "latest",
     "gmap3": "latest",
     "background-size-polyfill": "latest",
-    "owl-carousel2": "*",
-    "slider-pro": "~1.1.0"
+    "owl-carousel2": "latest",
+    "slider-pro": "latest"
   }
 }
