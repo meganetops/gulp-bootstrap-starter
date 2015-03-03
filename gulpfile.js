@@ -1,11 +1,25 @@
 'use strict';
 
-var gulp = require('gulp');
-var $ = require('gulp-load-plugins')();
-var fs = require('fs');
-var del = require('del');
+/*
+- MEMO -
+・ gulp-ruby-sassを最新に。
+・ gulp-autoprefixerを最新版に。
+・ gulp-minify-cssもついでに最新に。
+・ こんな感じでgulp-ruby-sassの最新版でいけるみたい
+  https://github.com/sindresorhus/gulp-ruby-sass/tree/rw/1.0
+・ テストするときは毎回コンパイルしたファイル・ディレクトリは削除したほうが無難
+
+・->関係なかった[ gulp-autoprefixerの最新版ではgulp-ruby-sassと相性悪くエラーでコンパイルにこける。
+  sourcemapがどうのこうの。gulp-ruby-sassでsourcemapをなしにする必要がある。
+  https://github.com/sindresorhus/gulp-ruby-sass/issues/130#issuecomment-55579060 ]
+*/
+var gulp        = require('gulp');
+var $           = require('gulp-load-plugins')();
+var fs          = require('fs');
+var del         = require('del');
 var browsersync = require('browser-sync');
-var reload = browsersync.reload;
+var runSequence = require('run-sequence');
+var reload      = browsersync.reload;
 
 var AUTOPREFIXER_BROWSERS = ['last 2 version','ie 9','ie 8'];
 var DOCUMENT_ROOT    = "build";
@@ -16,10 +30,12 @@ var ASSET_EJS        = "src/ejs";
 var ASSET_ICON       = "src/icons";
 var ASSET_JS         = "src/js";
 var SASS_ARG         = {
-                      loadPath: 'src/sass',
-                      style: 'expanded',
-                      noCache: true
-                    };
+                        loadPath: 'src/sass',
+                        style: 'expanded',
+                        noCache: true,
+                        cacheLocation:'./',
+                        sourcemap: true
+                      };
 var MY_IP            = "192.168.*.**";
 var SERVER_PORT      = 9000;
 var SERVER_STARTPATH = '/index.html';
@@ -35,17 +51,11 @@ var BS_OPTIONS       = {
                       };
 var HTMLMIN_OPTIONS  = {
                         empty:true,
-                        //do not remove empty attributes
                         cdata: true, 
-                        //do not strip CDATA from scripts
                         comments: true, 
-                        //do not remove comments
                         conditionals: true, 
-                        //do not remove conditional internet explorer comments
                         spare: true, 
-                        //do not remove redundant attributes
                         quotes: true
-                        //do not remove arbitrary quotes
                       };
 /* ----------------------------------
   packed task
@@ -57,54 +67,83 @@ gulp.task('install', ['bower_default','install_strap']);
 /*
   BrowserSync & WATCH
 */
-gulp.task('server',function(){
+gulp.task('server',['watch'],function(){
   browsersync(BS_OPTIONS);
-  gulp.watch( [ASSET_EJS+'/json/*.json'],['jsony'] );
-  gulp.watch( [ASSET_DIR+'/**/*.ejs'],['ejsy'] );
-  gulp.watch( [ASSET_SASS+'/**/*.scss'], ['sassy'] );
-  gulp.watch( [DOCUMENT_ROOT+'/**/*.html'],reload );
-  gulp.watch( [DOCUMENT_ROOT+'/**/*.css'], reload );
-  gulp.watch( [ASSET_IMAGES+'/**/*.+(jpg|gif|png)'], ['img'] );
+});
+gulp.task('watch',function(){
+  gulp.watch( [ASSET_EJS    +'/json/*.json'],['jsony'] );
+  gulp.watch( [ASSET_DIR    +'/**/*.ejs'], function(e){
+    if(e.type !== "deleted") {
+      gulp.start('ejsy');
+    }
+  });
+  gulp.watch( [ASSET_SASS   +'/**/*.scss'], ['sassy',reload] );
+  gulp.watch( [ASSET_JS     +'/**/*.js'], ['jsy',reload]);
+});
+/*
+  JSのコピー
+*/
+gulp.task('jsy',['js_copy'],function(callback){
+  console.log('done');
 });
 /*
   EJS用JSONのコンパイル
 */
-gulp.task('jsony',['ejs_json'],function(){
-  // ejs_jsonタスク終了時に何かしたければこちらへ?
-  return gulp.run(['ejsy']);
+gulp.task('jsony',function(){
+  return runSequence('ejs_json','ejsy');
   console.log('done');
 });
 /*
   EJSのコンパイル
 */
-gulp.task('ejsy',['ejs'],function(){
-  // ejsタスク終了時に何かしたければこちらへ?
+gulp.task('ejsy',function(){
+  return runSequence('ejs',reload);
   console.log('done');
 });
 /*
   Sassのコンパイル
 */
 gulp.task('sassy',['sass'],function(){
-  // sassタスク終了時に何かしたければこちらへ?
   console.log('done');
 });
 /*
   画像のサイズ圧縮
 */
 gulp.task('img',['imagemin'],function(){
-  // imageminタスク終了時に何かしたければこちらへ?
-  // del([ASSET_IMAGES+'/**/*.(jpg|gif|png)'],cb);
   console.log('done');
 });
 /*
   distribute
 */
 gulp.task('release',function(){
-  console.log('done');
+  return runSequence('js_clean','js_copy','css_clean','sassy','img_clean','img','html_clean','ejs_json','ejs');
 });
 /* ----------------------------------
   tasks
 ----------------------------------- */
+/*
+    buildのjsフォルダを削除
+*/
+gulp.task('js_clean', function (callback) {
+    return del(DOCUMENT_ROOT+'/js/**/*',callback);
+});
+gulp.task('css_clean', function (callback) {
+    return del(DOCUMENT_ROOT+'/css/**/*',callback);
+});
+gulp.task('img_clean', function (callback) {
+    return del(DOCUMENT_ROOT+'/**/*.+(jpg|gif|png)',callback);
+});
+gulp.task('html_clean', function (callback) {
+    return del(DOCUMENT_ROOT+'/**/*.html',callback);
+});
+/*
+    buildのjsフォルダにコピー
+*/
+gulp.task('js_copy',function (callback) {
+    // console.log('js_copy');
+    return gulp.src(ASSET_JS+'/**/*')
+      .pipe(gulp.dest(DOCUMENT_ROOT+'/js'));
+});
 /*
     EJS用JSONファイルを結合
 */
@@ -130,10 +169,14 @@ gulp.task('ejs', function (e) {
   Sass Compail
 */
 gulp.task('sass',function(){
-  return gulp.src([ASSET_SASS+'/**/*.scss','!'+ASSET_SASS+'/bootstrap.scss'])
-      .pipe($.rubySass(SASS_ARG))
+  return $.rubySass(ASSET_SASS+'/style.scss',SASS_ARG)
       .on('error', function (err) { console.log(err.message); })
       .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+      .pipe($.minifyCss({keepBreaks:true,compatibility:'ie8'}))
+      .pipe($.sourcemaps.write('./', {
+        includeContent: false,
+        sourceRoot: ASSET_SASS
+      }))
       .pipe(gulp.dest(DOCUMENT_ROOT+'/css'));
 });
 /*
@@ -145,109 +188,109 @@ gulp.task('imagemin', function (fn) {
       .pipe(gulp.dest(DOCUMENT_ROOT));
 });
 /*
-  icon Font
-*/
-// gulp.task('iconfont', function(){
-//   gulp.src([ASSET_ICON+'/*.svg'])
-//     .pipe($.iconfont({
-//       fontName: 'myfont', // required
-//       appendCodepoints: true // recommended option
-//     }))
-//       .on('codepoints', function(codepoints, options) {
-//         // CSS templating, e.g.
-//         console.log(codepoints, options);
-//       })
-//     .pipe(gulp.dest(DOCUMENT_ROOT+'/fonts/'));
-// });
-/*
   Bootstrap bower_compornents to some folsers
 */
 gulp.task('install_strap', ['copy_sass'], function () {
   //sass compile
-  gulp.src(ASSET_SASS+'/bootstrap.scss')
-      .pipe($.rubySass(SASS_ARG))
-      .on('error', function (err) { console.log(err.message); })
-      .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
-      .pipe($.minifyCss({keepBreaks:true}))
-      .pipe($.rename('bootstrap.min.css'))
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/css'));
+  // gulp.src(ASSET_SASS+'/bootstrap.scss')
+  //     .pipe($.rubySass(SASS_ARG))
+  //     .on('error', function (err) { console.log(err.message); })
+  //     .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+  //     .pipe($.minifyCss({keepBreaks:true}))
+  //     .pipe($.rename('bootstrap.min.css'))
+  //     .pipe(gulp.dest(ASSET_DIR+'/css'));
+  // $.rubySass(ASSET_SASS+'/utility/bootstrap.scss',SASS_ARG)
+  //     .on('error', function (err) { console.log(err.message); })
+  //     .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+  //     .pipe($.minifyCss({keepBreaks:true,compatibility:'ie8'}))
+  //     .pipe($.rename('bootstrap.min.css'))
+  //     .pipe($.sourcemaps.write('./', {
+  //       includeContent: false,
+  //       sourceRoot: ASSET_SASS
+  //     }))
+  //     .pipe(gulp.dest(DOCUMENT_ROOT+'/css'));
   //fonts copy
   gulp.src('bower_components/bootstrap-sass-official/assets/fonts/**/*')
     .pipe(gulp.dest(DOCUMENT_ROOT+'/fonts'))
   //images copy
   gulp.src('bower_components/bootstrap-sass-official/assets/images/**/*')
-    .pipe(gulp.dest(DOCUMENT_ROOT+'/img/bootstrap'))
+    .pipe(gulp.dest(ASSET_DIR+'/img/bootstrap'))
   //javascript copy
   gulp.src('bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js')
     .pipe($.uglify({ preserveComments: 'all' }))
     .pipe($.rename('bootstrap.min.js'))
-    .pipe(gulp.dest(DOCUMENT_ROOT+'/js/bootstrap'))
+    .pipe(gulp.dest(ASSET_DIR+'/js/bootstrap'))
 });
+
 gulp.task('copy_sass', function () {
   //scss copy
   return gulp.src('bower_components/bootstrap-sass-official/assets/stylesheets/**/*')
     .pipe(gulp.dest(ASSET_SASS+'/vendor/bootstrap'))
 });
 
-gulp.task('bower_default', function () {
+gulp.task('bower_default',function(){
+  return runSequence('compile_bower','js_copy');
+});
+gulp.task('compile_bower', function () {
 //jquery1.* - for IE8
   gulp.src('bower_components/jquery-legacy/dist/jquery.min.js')
     .pipe($.rename('jquery.legacy.min.js'))
-    .pipe(gulp.dest(DOCUMENT_ROOT+'/js'))
+    .pipe(gulp.dest(ASSET_DIR+'/js'))
 //jquery2.*
   gulp.src('bower_components/jquery-modern/dist/jquery.min.js')
     .pipe($.rename('jquery.min.js'))
-    .pipe(gulp.dest(DOCUMENT_ROOT+'/js'))
+    .pipe(gulp.dest(ASSET_DIR+'/js'))
 //modernizr
   gulp.src('bower_components/modernizr/modernizr.js')
       .pipe($.uglify({ preserveComments: 'all' }))
       .pipe($.rename('modernizr.min.js'))
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
 //selectivizr
   gulp.src('bower_components/selectivizr/selectivizr.js')
       .pipe($.uglify({ preserveComments: 'all' }))
       .pipe($.rename('selectivizr.min.js'))
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
 //respond 
   gulp.src('bower_components/respond/dest/respond.min.js')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
 //jquery-cookie
   gulp.src('bower_components/jquery.cookie/jquery.cookie.js')
       .pipe($.uglify({ preserveComments: 'all' }))
       .pipe($.rename('jquery.cookie.min.js'))
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
 //magnific-popup
   gulp.src('bower_components/magnific-popup/dist/*')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/magnific-popup'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/magnific-popup'));
 //matchHeight 
   gulp.src('bower_components/matchHeight/jquery.matchHeight-min.js')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
 //lazyload 
   gulp.src('bower_components/jquery.lazyload/jquery.lazyload.min.js')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
 //bxslider
   gulp.src('bower_components/bxslider-4/jquery.bxslider.min.js')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/bxslider'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/bxslider'));
 //OwlCarousel2
   gulp.src('bower_components/owl-carousel2/dist/owl.carousel.min.js')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
   gulp.src('bower_components/owl-carousel2/dist/assets/owl.carousel.min.css')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
   gulp.src('bower_components/owl-carousel2/dist/assets/owl.theme.default.min.css')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
   gulp.src('bower_components/owl-carousel2/dist/assets/ajax-loader.gif')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
   gulp.src('bower_components/owl-carousel2/dist/assets/owl.video.play.png')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/owl-carousel2'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
 // Slider-pro
   gulp.src('bower_components/slider-pro/dist/js/jquery.sliderPro.min.js')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/slider-pro'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro'));
   gulp.src('bower_components/slider-pro/dist/css/slider-pro.min.css')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/slider-pro'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro'));
   gulp.src('bower_components/slider-pro/dist/css/images/*')
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/js/lib/slider-pro/images'));
+      .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro/images'));
 // background-size-polyfill
   gulp.src('bower_components/background-size-polyfill/backgroundsize.min.htc')
+      .pipe(gulp.dest(ASSET_DIR+'/'))
       .pipe(gulp.dest(DOCUMENT_ROOT+'/'));
 });
 

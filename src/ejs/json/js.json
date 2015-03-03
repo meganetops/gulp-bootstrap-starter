@@ -1,14 +1,8 @@
 {
   "js": {
     "head_js": [
-      "js/lib/javascript.js",
-      "js/lib/javascript.js",
-      "js/lib/javascript.js"
     ],
     "head_css": [
-      "js/css/javascript.css",
-      "js/css/javascript.css",
-      "js/css/javascript.css"
     ],
     "foot_js": [
       "js/lib/jquery.easings.min.js",

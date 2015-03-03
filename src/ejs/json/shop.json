@@ -1,32 +1,12 @@
 {
   "shops": [
     {
-        "shop_name" : "ショップ---no101",
-        "shop_description" : "ショップ1の説明"
+        "shop_name" : "no101",
+        "shop_description" : "1の説明"
     },
     {
-        "shop_name" : "ショップ2---no200",
-        "shop_description" : "ショップ2の説明"
-    },
-    {
-        "shop_name" : "ショップ3---no3",
-        "shop_description" : "ショップ3の説明"
-    },
-    {
-        "shop_name" : "ショップ4  ---",
-        "shop_description" : "ショップ4の説明"
-    },
-    {
-        "shop_name" : "ショップ5",
-        "shop_description" : "ショップ5の説明"
-    },
-    {
-        "shop_name" : "ショップ5",
-        "shop_description" : "ショップ5の説明"
-    },
-    {
-        "shop_name" : "ショップ6",
-        "shop_description" : "ショップ5の説明"
+        "shop_name" : "no200",
+        "shop_description" : "2の説明"
     }
   ]
 }
