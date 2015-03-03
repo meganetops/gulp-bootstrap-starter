@@ -228,70 +228,117 @@ gulp.task('copy_sass', function () {
     .pipe(gulp.dest(ASSET_SASS+'/vendor/bootstrap'))
 });
 
-gulp.task('bower_default',function(){
-  return runSequence('compile_bower','js_copy');
+gulp.task('bower_default',['compile_bower'],function(){
+  // return runSequence('compile_bower','js_copy');
+  gulp.start('js_copy');
+  console.log("done");
 });
-gulp.task('compile_bower', function () {
+gulp.task('compile_bower', function (callback) {
+
+  var d = new Defer();
+
+  d.exec(function() {
+    callback();
+  });
+
 //jquery1.* - for IE8
-  gulp.src('bower_components/jquery-legacy/dist/jquery.min.js')
-    .pipe($.rename('jquery.legacy.min.js'))
-    .pipe(gulp.dest(ASSET_DIR+'/js'))
+  d.until(
+    gulp.src('bower_components/jquery-legacy/dist/jquery.min.js')
+      .pipe($.rename('jquery.legacy.min.js'))
+      .pipe(gulp.dest(ASSET_DIR+'/js'))
+  );
 //jquery2.*
-  gulp.src('bower_components/jquery-modern/dist/jquery.min.js')
-    .pipe($.rename('jquery.min.js'))
-    .pipe(gulp.dest(ASSET_DIR+'/js'))
+  d.until(
+    gulp.src('bower_components/jquery-modern/dist/jquery.min.js')
+      .pipe($.rename('jquery.min.js'))
+      .pipe(gulp.dest(ASSET_DIR+'/js'))
+  );
 //modernizr
-  gulp.src('bower_components/modernizr/modernizr.js')
-      .pipe($.uglify({ preserveComments: 'all' }))
-      .pipe($.rename('modernizr.min.js'))
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
+  d.until(
+    gulp.src('bower_components/modernizr/modernizr.js')
+        .pipe($.uglify({ preserveComments: 'all' }))
+        .pipe($.rename('modernizr.min.js'))
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib'))
+  );
 //selectivizr
-  gulp.src('bower_components/selectivizr/selectivizr.js')
-      .pipe($.uglify({ preserveComments: 'all' }))
-      .pipe($.rename('selectivizr.min.js'))
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
+  d.until(
+    gulp.src('bower_components/selectivizr/selectivizr.js')
+        .pipe($.uglify({ preserveComments: 'all' }))
+        .pipe($.rename('selectivizr.min.js'))
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib'))
+  );
 //respond 
-  gulp.src('bower_components/respond/dest/respond.min.js')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
+  d.until(
+    gulp.src('bower_components/respond/dest/respond.min.js')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib'))
+  );
 //jquery-cookie
-  gulp.src('bower_components/jquery.cookie/jquery.cookie.js')
-      .pipe($.uglify({ preserveComments: 'all' }))
-      .pipe($.rename('jquery.cookie.min.js'))
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
+  d.until(
+    gulp.src('bower_components/jquery.cookie/jquery.cookie.js')
+        .pipe($.uglify({ preserveComments: 'all' }))
+        .pipe($.rename('jquery.cookie.min.js'))
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib'))
+  );
 //magnific-popup
-  gulp.src('bower_components/magnific-popup/dist/*')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/magnific-popup'));
+  d.until(
+    gulp.src('bower_components/magnific-popup/dist/*')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/magnific-popup'))
+  );
 //matchHeight 
-  gulp.src('bower_components/matchHeight/jquery.matchHeight-min.js')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
+  d.until(
+    gulp.src('bower_components/matchHeight/jquery.matchHeight-min.js')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib'))
+  );
 //lazyload 
-  gulp.src('bower_components/jquery.lazyload/jquery.lazyload.min.js')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib'));
+  d.until(
+    gulp.src('bower_components/jquery.lazyload/jquery.lazyload.min.js')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib'))
+  );
 //bxslider
-  gulp.src('bower_components/bxslider-4/jquery.bxslider.min.js')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/bxslider'));
+  d.until(
+    gulp.src('bower_components/bxslider-4/jquery.bxslider.min.js')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/bxslider'))
+  );
 //OwlCarousel2
-  gulp.src('bower_components/owl-carousel2/dist/owl.carousel.min.js')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
-  gulp.src('bower_components/owl-carousel2/dist/assets/owl.carousel.min.css')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
-  gulp.src('bower_components/owl-carousel2/dist/assets/owl.theme.default.min.css')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
-  gulp.src('bower_components/owl-carousel2/dist/assets/ajax-loader.gif')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
-  gulp.src('bower_components/owl-carousel2/dist/assets/owl.video.play.png')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'));
+  d.until(
+    gulp.src('bower_components/owl-carousel2/dist/owl.carousel.min.js')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'))
+  );
+  d.until(
+    gulp.src('bower_components/owl-carousel2/dist/assets/owl.carousel.min.css')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'))
+  );
+  d.until(
+    gulp.src('bower_components/owl-carousel2/dist/assets/owl.theme.default.min.css')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'))
+  );
+  d.until(
+    gulp.src('bower_components/owl-carousel2/dist/assets/ajax-loader.gif')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'))
+  );
+  d.until(
+    gulp.src('bower_components/owl-carousel2/dist/assets/owl.video.play.png')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/owl-carousel2'))
+  );
 // Slider-pro
-  gulp.src('bower_components/slider-pro/dist/js/jquery.sliderPro.min.js')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro'));
-  gulp.src('bower_components/slider-pro/dist/css/slider-pro.min.css')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro'));
-  gulp.src('bower_components/slider-pro/dist/css/images/*')
-      .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro/images'));
+  d.until(
+    gulp.src('bower_components/slider-pro/dist/js/jquery.sliderPro.min.js')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro'))
+  );
+  d.until(
+    gulp.src('bower_components/slider-pro/dist/css/slider-pro.min.css')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro'))
+  );
+  d.until(
+    gulp.src('bower_components/slider-pro/dist/css/images/*')
+        .pipe(gulp.dest(ASSET_DIR+'/js/lib/slider-pro/images'))
+  );
 // background-size-polyfill
-  gulp.src('bower_components/background-size-polyfill/backgroundsize.min.htc')
-      .pipe(gulp.dest(ASSET_DIR+'/'))
-      .pipe(gulp.dest(DOCUMENT_ROOT+'/'));
+  d.until(
+    gulp.src('bower_components/background-size-polyfill/backgroundsize.min.htc')
+        .pipe(gulp.dest(ASSET_DIR+'/'))
+        .pipe(gulp.dest(DOCUMENT_ROOT+'/'))
+  );
 });
 
 /* ----------------------------------
